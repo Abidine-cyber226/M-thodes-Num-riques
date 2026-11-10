@@ -1,4 +1,4 @@
-// TP1 MN2 -- application etudiante. Noms des trois membres : ...
+// TP1 MN2 -- application etudiante. Noms des trois membres : SORGHO Abidine 20240194-NIKIEMA Joris 20240175
 // Placer ce fichier et TP_01_Outils_Quadrature.sce dans le meme dossier.
 clear;
 exec("TP_01_Outils_Quadrature.sce", -1);
@@ -14,20 +14,22 @@ errT = ET; errS = ET;
 for k = 1:length(ns)
     n = ns(k);
     [t, y] = echantillonner(modele, 0, 1, n);
-    // TODO 1 : utiliser les deux quadratures du CM1.
-    ET(k) = %nan;
-    ES(k) = %nan;
-    // TODO 2 : erreurs absolues par rapport a Iref.
-    errT(k) = %nan;
-    errS(k) = %nan;
-    mprintf("n=%d T=%.9f S=%.9f ET=%.3e ES=%.3e\n", ..
-            n, ET(k), ES(k), errT(k), errS(k));
+    // TODO 1 : calcul des integrales approchees
+ET(k) = trapezes(t, y);
+ES(k) = simpson(t, y);
+
+// TODO 2 : erreurs absolues par rapport a Iref
+errT(k) = abs(ET(k) - Iref);
+errS(k) = abs(ES(k) - Iref);
+mprintf("n=%d T=%.9f S=%.9f ET=%.3e ES=%.3e\n", ..
+    n, ET(k), ES(k), errT(k), errS(k));
 end
+
 for k = 1:length(ns)-1
-    // TODO 3 : mesurer les ordres entre n et 2n.
-    pT = %nan;
-    pS = %nan;
-    mprintf("n=%d -> %d : pT=%.3f pS=%.3f\n", ..
+   // TODO 3 : ordres observes entre n et 2n
+pT = ordre_observe(errT(k), errT(k+1));
+pS = ordre_observe(errS(k), errS(k+1));
+mprintf("n=%d -> %d : pT=%.3f pS=%.3f\n", ..
             ns(k), ns(k+1), pT, pS);
 end
 
