@@ -39,15 +39,20 @@ Pkw = [2.0 2.6 3.0 2.5 1.9];
 th = zeros(1, length(tmin));
 for i = 1:length(tmin)
     // TODO 4 : convertir les minutes en heures.
-    th(i) = %nan;
+for i = 1:length(tmin)
+    th(i) = tmin(i) / 60;
 end
 // TODO 5 : energie par les deux quadratures (en kWh).
-Etrap = %nan;
-Esimp = %nan;
-mprintf("Pompe : trapezes=%.6f kWh ; Simpson=%.6f kWh\n", ..
-        Etrap, Esimp);
-mprintf("Ecart=%.6f kWh ; borne des lectures=%.6f kWh\n", ..
-        abs(Etrap-Esimp), 0.1*40/60);
+// Energie estimee par les deux methodes
+Etrap = trapezes(th, P);
+Esimp = simpson(th, P);
 
-// Dans le rapport : dire ce que les calculs permettent de conclure.
-// Ne pas deduire un ordre de convergence des cinq mesures de la pompe.
+// Ecart entre les estimations et borne d'incertitude
+ecart = abs(Etrap - Esimp);
+incertitude = 0.1 * 40 / 60;
+
+mprintf("Energie par les trapezes : %.6f kWh\n", Etrap);
+mprintf("Energie par Simpson      : %.6f kWh\n", Esimp);
+mprintf("Ecart entre estimations  : %.6f kWh\n", ecart);
+mprintf("Borne d'incertitude      : %.6f kWh\n", incertitude);
+
